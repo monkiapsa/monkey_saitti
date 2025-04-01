@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} - Monkey Rapsa</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Header component -->
+    {{> header}}
+
+    <main>
+        <!-- Hero section -->
+        <section class="hero" style="background-image: linear-gradient(rgba(15, 17, 22, 0.9), rgba(15, 17, 22, 0.9)), url('{{heroImage}}');">
+            <h1>{{pageTitle}}</h1>
+            <p>{{pageDescription}}</p>
+        </section>
+
+        <!-- Main content -->
+        <section class="content-section">
+            <div class="container">
+                <!-- Strapi Dynamic Zone -->
+                {{#each contentBlocks}}
+                    {{#if (eq type "text")}}
+                        <div class="text-block">
+                            <h2>{{this.title}}</h2>
+                            <div class="rich-text">
+                                {{this.content}}
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if (eq type "image")}}
+                        <div class="image-block">
+                            <img src="{{this.url}}" alt="{{this.alt}}">
+                            {{#if this.caption}}
+                                <p class="caption">{{this.caption}}</p>
+                            {{/if}}
+                        </div>
+                    {{/if}}
+
+                    {{#if (eq type "quote")}}
+                        <blockquote class="quote-block">
+                            <p>{{this.quote}}</p>
+                            <cite>{{this.author}}</cite>
+                        </blockquote>
+                    {{/if}}
+                {{/each}}
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer component -->
+    {{> footer}}
+
+    <script src="../js/main.js"></script>
+</body>
+</html> 

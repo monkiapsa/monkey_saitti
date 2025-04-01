@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} - Monkey Rapsa</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Header component -->
+    {{> header}}
+
+    <main>
+        <!-- Hero section -->
+        <section class="hero" style="background-image: linear-gradient(rgba(15, 17, 22, 0.9), rgba(15, 17, 22, 0.9)), url('{{heroImage}}');">
+            <h1>{{pageTitle}}</h1>
+            <p>{{pageDescription}}</p>
+        </section>
+
+        <!-- Blog Content -->
+        <section class="blog-content">
+            <div class="container">
+                <div class="blog-header">
+                    <div class="meta">
+                        <span class="date">{{publishDate}}</span>
+                        <span class="author">{{author}}</span>
+                        <div class="categories">
+                            {{#each categories}}
+                                <span class="category">{{this}}</span>
+                            {{/each}}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Dynamic Content Blocks -->
+                {{#each contentBlocks}}
+                    {{#if (eq type "paragraph")}}
+                        <div class="text-block">
+                            {{#if this.title}}
+                                <h2>{{this.title}}</h2>
+                            {{/if}}
+                            <div class="rich-text">
+                                {{this.content}}
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if (eq type "image")}}
+                        <figure class="image-block">
+                            <img src="{{this.url}}" alt="{{this.alt}}">
+                            {{#if this.caption}}
+                                <figcaption>{{this.caption}}</figcaption>
+                            {{/if}}
+                        </figure>
+                    {{/if}}
+
+                    {{#if (eq type "code")}}
+                        <div class="code-block">
+                            <pre><code class="{{this.language}}">{{this.code}}</code></pre>
+                        </div>
+                    {{/if}}
+
+                    {{#if (eq type "quote")}}
+                        <blockquote>
+                            <p>{{this.quote}}</p>
+                            <cite>{{this.author}}</cite>
+                        </blockquote>
+                    {{/if}}
+                {{/each}}
+
+                <!-- Tags -->
+                {{#if tags}}
+                    <div class="tags">
+                        {{#each tags}}
+                            <span class="tag">{{this}}</span>
+                        {{/each}}
+                    </div>
+                {{/if}}
+
+                <!-- Share Buttons -->
+                <div class="share-buttons">
+                    <h3>Jaa artikkeli</h3>
+                    <div class="share-links">
+                        <a href="#" class="share-link">Twitter</a>
+                        <a href="#" class="share-link">Facebook</a>
+                        <a href="#" class="share-link">LinkedIn</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Related Posts -->
+        {{#if relatedPosts}}
+            <section class="related-posts">
+                <div class="container">
+                    <h2>Lue myös</h2>
+                    <div class="posts-grid">
+                        {{#each relatedPosts}}
+                            <article class="post-card">
+                                <img src="{{this.thumbnail}}" alt="{{this.title}}">
+                                <div class="post-content">
+                                    <h3>{{this.title}}</h3>
+                                    <p>{{this.excerpt}}</p>
+                                    <a href="{{this.url}}" class="read-more">Lue lisää</a>
+                                </div>
+                            </article>
+                        {{/each}}
+                    </div>
+                </div>
+            </section>
+        {{/if}}
+    </main>
+
+    <!-- Footer component -->
+    {{> footer}}
+
+    <script src="../js/main.js"></script>
+</body>
+</html> 

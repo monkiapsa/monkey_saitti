@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{title}} - Monkey Rapsa</title>
+    <link rel="stylesheet" href="../css/styles.css">
+</head>
+<body>
+    <!-- Header component -->
+    {{> header}}
+
+    <main>
+        <!-- Hero section -->
+        <section class="hero" style="background-image: linear-gradient(rgba(15, 17, 22, 0.9), rgba(15, 17, 22, 0.9)), url('{{heroImage}}');">
+            <h1>{{pageTitle}}</h1>
+            <p>{{pageDescription}}</p>
+        </section>
+
+        <!-- Service Features -->
+        <section class="features">
+            <div class="container">
+                {{#each features}}
+                <div class="feature-card">
+                    <img src="{{this.icon}}" alt="{{this.title}} icon">
+                    <h3>{{this.title}}</h3>
+                    <p>{{this.description}}</p>
+                </div>
+                {{/each}}
+            </div>
+        </section>
+
+        <!-- Service Details -->
+        <section class="service-details">
+            <div class="container">
+                {{#each contentBlocks}}
+                    {{#if (eq type "feature_with_image")}}
+                        <div class="feature-block {{this.imagePosition}}">
+                            <div class="feature-content">
+                                <h2>{{this.title}}</h2>
+                                <p>{{this.description}}</p>
+                                {{#if this.bulletPoints}}
+                                    <ul>
+                                        {{#each this.bulletPoints}}
+                                            <li>{{this}}</li>
+                                        {{/each}}
+                                    </ul>
+                                {{/if}}
+                            </div>
+                            <div class="feature-image">
+                                <img src="{{this.image}}" alt="{{this.imageAlt}}">
+                            </div>
+                        </div>
+                    {{/if}}
+
+                    {{#if (eq type "pricing")}}
+                        <div class="pricing-block">
+                            <h2>{{this.title}}</h2>
+                            <div class="pricing-grid">
+                                {{#each this.packages}}
+                                    <div class="pricing-card">
+                                        <h3>{{this.name}}</h3>
+                                        <p class="price">{{this.price}}</p>
+                                        <ul>
+                                            {{#each this.features}}
+                                                <li>{{this}}</li>
+                                            {{/each}}
+                                        </ul>
+                                        <button class="primary-btn">{{this.ctaText}}</button>
+                                    </div>
+                                {{/each}}
+                            </div>
+                        </div>
+                    {{/if}}
+                {{/each}}
+            </div>
+        </section>
+
+        <!-- Call to Action -->
+        <section class="cta-section">
+            <div class="container">
+                <h2>{{ctaTitle}}</h2>
+                <p>{{ctaDescription}}</p>
+                <button class="primary-btn">{{ctaButtonText}}</button>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer component -->
+    {{> footer}}
+
+    <script src="../js/main.js"></script>
+</body>
+</html> 
