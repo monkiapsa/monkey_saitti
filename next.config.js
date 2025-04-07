@@ -12,6 +12,11 @@ const nextConfig = {
     ],
     unoptimized: true,
   },
+  // Add experimental features
+  experimental: {
+    appDir: true,
+    serverActions: false,
+  },
 }
 
 module.exports = nextConfig 
