@@ -1,6 +1,6 @@
 [build]
   command = "npm run build"
-  publish = ".next/static"
+  publish = "out"
 
 [build.environment]
   NEXT_PUBLIC_SANITY_PROJECT_ID = "y55ynsue"
