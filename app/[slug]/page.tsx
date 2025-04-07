@@ -1,11 +1,22 @@
 import { getServicePage, getAllServicePages } from '@/lib/sanity'
 import { urlFor } from '@/lib/sanity'
 
+// Remove dynamic rendering since we're using static export
+export const dynamic = 'error'
+export const dynamicParams = false
+
 export async function generateStaticParams() {
-  const services = await getAllServicePages()
-  return services.map((service: any) => ({
-    slug: service.slug.current,
-  }))
+  try {
+    const services = await getAllServicePages()
+    if (!services) return []
+    
+    return services.map((service: any) => ({
+      slug: service.slug.current,
+    }))
+  } catch (error) {
+    console.error('Error generating static params:', error)
+    return []
+  }
 }
 
 export default async function ServicePage({ params }: { params: { slug: string } }) {
