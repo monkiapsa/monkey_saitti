@@ -1,24 +1,24 @@
 import { getServicePage, getAllServicePages } from '@/lib/sanity'
 import { urlFor } from '@/lib/sanity'
 
-// Remove dynamic rendering since we're using static export
-export const dynamic = 'error'
-export const dynamicParams = false
+// This is a static page
+export const dynamic = 'force-static'
 
+// Generate the static paths at build time
 export async function generateStaticParams() {
-  try {
-    const services = await getAllServicePages()
-    if (!services) return []
-    
-    return services.map((service: any) => ({
-      slug: service.slug.current,
-    }))
-  } catch (error) {
-    console.error('Error generating static params:', error)
+  const services = await getAllServicePages()
+  
+  if (!services || !Array.isArray(services)) {
+    console.warn('No services found or invalid data returned')
     return []
   }
+
+  return services.map((service) => ({
+    slug: service.slug.current,
+  }))
 }
 
+// Define the page component
 export default async function ServicePage({ params }: { params: { slug: string } }) {
   const service = await getServicePage(params.slug)
 
