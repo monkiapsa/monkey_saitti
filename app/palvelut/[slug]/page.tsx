@@ -19,16 +19,11 @@ export async function getStaticPaths() {
 }
 
 // Generate the static paths at build time
-export async function generateStaticParams(): Promise<{ slug: string }[]> {
-  try {
-    const services = await getAllServicePages()
-    return services?.map((service: any) => ({
-      slug: service.slug.current,
-    })) || []
-  } catch (error) {
-    console.error('Error generating static params:', error)
-    return []
-  }
+export async function generateStaticParams() {
+  const services = await getAllServicePages()
+  return services?.map((service: any) => ({
+    slug: service.slug.current,
+  })) || []
 }
 
 // Define the page component
