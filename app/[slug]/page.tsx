@@ -1,10 +1,26 @@
-import { getServicePage } from '@/lib/sanity'
+import { getServicePage, getAllServicePages } from '@/lib/sanity'
 import { urlFor } from '@/lib/sanity'
 
-export default async function ServicePage({ params }: { params: { slug: string } }) {
-  const page = await getServicePage(params.slug)
+export async function generateStaticParams() {
+  const services = await getAllServicePages()
+  return services.map((service: any) => ({
+    slug: service.slug.current,
+  }))
+}
 
-  if (!page) return <div>Loading...</div>
+export default async function ServicePage({ params }: { params: { slug: string } }) {
+  const service = await getServicePage(params.slug)
+
+  if (!service) {
+    return (
+      <main>
+        <section className="hero">
+          <h1>Palvelua ei löytynyt</h1>
+          <p>Valitettavasti etsimääsi palvelua ei löytynyt.</p>
+        </section>
+      </main>
+    )
+  }
 
   return (
     <main>
@@ -12,17 +28,17 @@ export default async function ServicePage({ params }: { params: { slug: string }
         className="hero" 
         style={{
           backgroundImage: `linear-gradient(rgba(15, 17, 22, 0.9), rgba(15, 17, 22, 0.9)), url(${
-            page.heroImage ? urlFor(page.heroImage).url() : ''
+            service.heroImage ? urlFor(service.heroImage).url() : ''
           })`
         }}
       >
-        <h1>{page.pageTitle}</h1>
-        <p>{page.pageDescription}</p>
+        <h1>{service.pageTitle}</h1>
+        <p>{service.pageDescription}</p>
       </section>
 
       <section className="features">
         <div className="container">
-          {page.features?.map((feature: any, index: number) => (
+          {service.features?.map((feature: any, index: number) => (
             <div key={index} className="feature-card">
               {feature.icon && (
                 <img src={urlFor(feature.icon).url()} alt={feature.title} />
@@ -36,7 +52,7 @@ export default async function ServicePage({ params }: { params: { slug: string }
 
       <section className="service-details">
         <div className="container">
-          {page.contentBlocks?.map((block: any, index: number) => {
+          {service.contentBlocks?.map((block: any, index: number) => {
             if (block.type === 'feature_with_image') {
               return (
                 <div key={index} className={`feature-block ${block.imagePosition}`}>
@@ -86,12 +102,12 @@ export default async function ServicePage({ params }: { params: { slug: string }
         </div>
       </section>
 
-      {page.ctaSection && (
+      {service.ctaSection && (
         <section className="cta-section">
           <div className="container">
-            <h2>{page.ctaSection.title}</h2>
-            <p>{page.ctaSection.description}</p>
-            <button className="primary-btn">{page.ctaSection.buttonText}</button>
+            <h2>{service.ctaSection.title}</h2>
+            <p>{service.ctaSection.description}</p>
+            <button className="primary-btn">{service.ctaSection.buttonText}</button>
           </div>
         </section>
       )}
