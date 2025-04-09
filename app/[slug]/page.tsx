@@ -16,32 +16,30 @@ export const dynamic = 'force-static'
 export const dynamicParams = false
 export const revalidate = 3600 // Revalidate every hour
 
-type Params = {
-  slug: string;
+// For static site generation
+export async function getStaticPaths() {
+  const services = await getAllServicePages()
+  const paths = services?.map((service) => ({
+    params: { slug: service.slug.current }
+  })) || []
+
+  return {
+    paths,
+    fallback: false
+  }
 }
 
-// Generate the static paths at build time
-export async function generateStaticParams() {
-  const services = await getAllServicePages()
-  return services?.map((service) => ({
-    slug: service.slug.current,
-  })) || [{ slug: 'default' }] // Add a default fallback
+export async function getStaticProps({ params }: { params: { slug: string } }) {
+  const service = await getServicePage(params.slug)
+  return {
+    props: {
+      service: service || null
+    }
+  }
 }
 
 // Define the page component
 export default async function ServicePage({ params }: { params: { slug: string } }) {
-  // If it's the default fallback page
-  if (params.slug === 'default') {
-    return (
-      <main>
-        <section className="hero">
-          <h1>Tervetuloa</h1>
-          <p>Valitse palvelu navigaatiosta.</p>
-        </section>
-      </main>
-    )
-  }
-
   const service = await getServicePage(params.slug)
 
   if (!service) {
