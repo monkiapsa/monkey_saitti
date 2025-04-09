@@ -17,25 +17,11 @@ export const dynamicParams = false
 export const revalidate = 3600 // Revalidate every hour
 
 // For static site generation
-export async function getStaticPaths() {
+export async function generateStaticParams() {
   const services = await getAllServicePages()
-  const paths = services?.map((service) => ({
-    params: { slug: service.slug.current }
-  })) || []
-
-  return {
-    paths,
-    fallback: false
-  }
-}
-
-export async function getStaticProps({ params }: { params: { slug: string } }) {
-  const service = await getServicePage(params.slug)
-  return {
-    props: {
-      service: service || null
-    }
-  }
+  return (services || []).map((service) => ({
+    slug: service.slug.current,
+  }))
 }
 
 // Define the page component
