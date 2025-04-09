@@ -23,7 +23,7 @@ export default async function ServicesPage() {
             <div key={service.slug.current} className="service-card">
               <h2>{service.pageTitle}</h2>
               <p>{service.pageDescription}</p>
-              <a href={`/palvelut/${service.slug.current}`} className="read-more">
+              <a href={`/${service.slug.current}`} className="read-more">
                 Lue lisää
               </a>
             </div>
