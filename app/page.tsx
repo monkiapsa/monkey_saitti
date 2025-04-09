@@ -1,8 +1,6 @@
 import { getHomePage } from '@/lib/sanity'
 import { urlFor } from '@/lib/sanity'
 
-export const dynamic = 'force-static'
-
 export default async function Home() {
   const homePage = await getHomePage()
 

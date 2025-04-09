@@ -1,11 +1,10 @@
 import { getAllServicePages } from '@/lib/sanity'
+import { urlFor } from '@/lib/sanity'
 
 export const metadata = {
   title: 'Palvelut',
   description: 'Tutustu palveluihimme',
 }
-
-export const dynamic = 'force-static'
 
 export default async function ServicesPage() {
   const services = await getAllServicePages()
