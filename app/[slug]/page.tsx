@@ -20,28 +20,28 @@ type Params = {
   slug: string;
 }
 
-export async function generateStaticParams(): Promise<Params[]> {
-  try {
-    const services = await getAllServicePages()
-    if (!services || !Array.isArray(services) || services.length === 0) {
-      console.warn('No services found in Sanity')
-      return []
-    }
-
-    const paths = services.map((service) => ({
-      slug: service.slug.current,
-    }))
-
-    console.log('Generated paths:', paths)
-    return paths
-  } catch (error) {
-    console.error('Error generating static params:', error)
-    return []
-  }
+// Generate the static paths at build time
+export async function generateStaticParams() {
+  const services = await getAllServicePages()
+  return services?.map((service) => ({
+    slug: service.slug.current,
+  })) || [{ slug: 'default' }] // Add a default fallback
 }
 
 // Define the page component
 export default async function ServicePage({ params }: { params: { slug: string } }) {
+  // If it's the default fallback page
+  if (params.slug === 'default') {
+    return (
+      <main>
+        <section className="hero">
+          <h1>Tervetuloa</h1>
+          <p>Valitse palvelu navigaatiosta.</p>
+        </section>
+      </main>
+    )
+  }
+
   const service = await getServicePage(params.slug)
 
   if (!service) {
