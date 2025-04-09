@@ -4,26 +4,23 @@ import { urlFor } from '@/lib/sanity'
 // This is a static page
 export const dynamic = 'force-static'
 export const dynamicParams = false
-
-// For backwards compatibility with older Next.js versions
-export async function getStaticPaths() {
-  const services = await getAllServicePages()
-  const paths = services?.map((service: any) => ({
-    params: { slug: service.slug.current }
-  })) || []
-  
-  return {
-    paths,
-    fallback: false
-  }
-}
+export const revalidate = 3600 // Revalidate every hour
 
 // Generate the static paths at build time
 export async function generateStaticParams() {
-  const services = await getAllServicePages()
-  return services?.map((service: any) => ({
-    slug: service.slug.current,
-  })) || []
+  try {
+    const services = await getAllServicePages()
+    if (!services || services.length === 0) {
+      console.warn('No services found in Sanity')
+      return []
+    }
+    return services.map((service: any) => ({
+      slug: service.slug.current,
+    }))
+  } catch (error) {
+    console.error('Error generating static params:', error)
+    return []
+  }
 }
 
 // Define the page component
