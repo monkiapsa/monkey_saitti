@@ -1,22 +1,39 @@
 import { getServicePage, getAllServicePages } from '@/lib/sanity'
 import { urlFor } from '@/lib/sanity'
 
+export const metadata = {
+  generateMetadata: async ({ params }: { params: { slug: string } }) => {
+    const service = await getServicePage(params.slug)
+    return {
+      title: service?.pageTitle || 'Palvelu',
+      description: service?.pageDescription || 'Palvelun kuvaus',
+    }
+  }
+}
+
 // This is a static page
 export const dynamic = 'force-static'
 export const dynamicParams = false
 export const revalidate = 3600 // Revalidate every hour
 
-// Generate the static paths at build time
-export async function generateStaticParams() {
+type Params = {
+  slug: string;
+}
+
+export async function generateStaticParams(): Promise<Params[]> {
   try {
     const services = await getAllServicePages()
-    if (!services || services.length === 0) {
+    if (!services || !Array.isArray(services) || services.length === 0) {
       console.warn('No services found in Sanity')
       return []
     }
-    return services.map((service: any) => ({
+
+    const paths = services.map((service) => ({
       slug: service.slug.current,
     }))
+
+    console.log('Generated paths:', paths)
+    return paths
   } catch (error) {
     console.error('Error generating static params:', error)
     return []
